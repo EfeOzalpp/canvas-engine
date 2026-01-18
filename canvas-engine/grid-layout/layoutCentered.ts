@@ -7,35 +7,42 @@ export type MakeCenteredGridOpts = {
   h: number;
   rows: number;
   useTopRatio?: number;
+  cols: number;
 };
+// w: available horizontal space
+// h: total vertical space
+// rows: authoritative vertical density
+// useTopRatio: vertical cropping (top portion only)
 
-/**
- * Constructs a square-cell grid where the cell size is driven by the (used) height.
- * The grid is generated in pixel space by returning the center point of each cell.
- */
 export function makeCenteredSquareGrid(opts: MakeCenteredGridOpts) {
   const { w, h, rows, useTopRatio = 1 } = opts;
 
-  const usableH = Math.max(
-    1,
-    Math.round(h * Math.max(0.01, Math.min(1, useTopRatio)))
-  );
+  const usableH = Math.max(1, Math.round(h * Math.max(0.01, Math.min(1, useTopRatio))));
 
-  const cell = usableH / Math.max(1, rows);
-  const cols = Math.ceil(w / cell);
+  // row
+  const cellH = usableH / Math.max(1, rows);
+
+  // controversial 
+  const cols = Math.max(1, Math.round(opts.cols || 12));
+  const cellW = w / cols;
+
+  // no need for ox centering because we fill width exactly
+  const ox = 0;
+  const oy = 0;
 
   const points: Pt[] = [];
   for (let r = 0; r < rows; r++) {
-    const cy = r * cell + cell / 2;
+    const cy = oy + r * cellH + cellH / 2;
     for (let c = 0; c < cols; c++) {
-      const cx = c * cell + cell / 2;
-      if (cx < 0 || cx > w) continue;
+      const cx = ox + c * cellW + cellW / 2;
       points.push({ x: Math.round(cx), y: Math.round(cy) });
     }
   }
 
-  return { points, rows, cols, cell };
+  const cell = cellH; // legacy scalar used everywhere else
+  return { points, rows, cols, cell, cellW, cellH, ox, oy };
 }
+
 
 /**
  * Converts avg in [0..1] to a row-major index into a flattened list of total length.

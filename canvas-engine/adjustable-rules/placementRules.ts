@@ -10,6 +10,7 @@ export type ShapeBands = Record<DeviceType, Record<ShapeName, Band>>;
 
 // 0 is top of the viewport and 1 is bottom of viewport topK is upper band and botK is lower band
 export const SHAPE_BANDS: Record<ShapeBandsMode, ShapeBands> = {
+  
   start: {
     mobile: {
       sun: { topK: 0.02, botK: 0.1 },
@@ -135,4 +136,4 @@ export const SHAPE_BANDS: Record<ShapeBandsMode, ShapeBands> = {
       carFactory: { topK: 0.3, botK: 0.9 },
     },
   },
-} as const;
+};

@@ -1,6 +1,7 @@
 // src/canvas-engine/adjustable-rules/canvasPadding.ts
 
 import { makeRowForbidden } from '../grid-layout/forbidden.ts';
+import type { DeviceType } from '../shared/responsiveness.ts';
 
 export type CanvasPaddingSpec = {
   rows: number;
@@ -8,14 +9,15 @@ export type CanvasPaddingSpec = {
   forbidden?: (r: number, c: number, rows: number, cols: number) => boolean;
 };
 
-export type CanvasPaddingBand = 'mobile' | 'tablet' | 'laptop';
 export type CanvasPaddingMode = 'start' | 'questionnaire' | 'overlay';
 
+// Shortcut all row occupied: CENTER_100
+// All row available: LR_0
 const CENTER_100 = { center: '100%' } as const;
 const LR_0 = { left: '0%', right: '0%' } as const;
 
 // Enter a new section for a new canvas padding rule
-export const CANVAS_PADDING: Record<CanvasPaddingMode, Record<CanvasPaddingBand, CanvasPaddingSpec>> = {
+export const CANVAS_PADDING: Record<CanvasPaddingMode, Record<DeviceType, CanvasPaddingSpec>> = {
   start: {
     mobile: {
       rows: 18,
@@ -41,7 +43,7 @@ export const CANVAS_PADDING: Record<CanvasPaddingMode, Record<CanvasPaddingBand,
     },
     laptop: {
       rows: 12,
-      useTopRatio: 0.8,
+      useTopRatio: 1,
       forbidden: makeRowForbidden([
         CENTER_100,
         { left: '28%', right: '30%' },
