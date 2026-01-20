@@ -37,7 +37,6 @@ export function composeField(opts: ComposeOpts): ComposeResult {
     h,
     rows: spec.rows,
     useTopRatio: spec.useTopRatio ?? 1,
-    cols: 0
   });
 
   const usedRows = usedRowsFromSpec(rows, spec.useTopRatio);

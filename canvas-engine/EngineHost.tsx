@@ -47,7 +47,8 @@ export function EngineHost({
   }, [open, stopOnOpenMounts]);
 
   const engine = useCanvasEngine({
-    visible: open && visible,
+    enabled: open,
+    visible: visible,
     dprMode: hostDef.dprMode,
     mount: hostDef.mount,
     zIndex: hostDef.zIndex,

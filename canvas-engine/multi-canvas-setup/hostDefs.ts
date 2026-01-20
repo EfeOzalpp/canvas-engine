@@ -2,8 +2,7 @@
 import { SCENE_RULESETS } from "../adjustable-rules/sceneRuleSets.ts";
 import type { SceneRuleSet } from "./types.ts";
 import type { SceneMode } from "../adjustable-rules/sceneRuleSets.ts"
-
-export type DprMode = "auto" | "cap2" | "cap1_5" | "fixed1";
+import type { DprMode } from "../runtime/platform/viewport.ts";
 
 // questionnaire exists as a state change withn start canvas, 
 // therefore it is excluded from Scene Mode (start, overlay).
@@ -35,7 +34,7 @@ export const HOST_DEFS = defineHosts({
   start: {
     mount: "#canvas-root",
     zIndex: 2,
-    dprMode: "cap2",
+    dprMode: "cap3",
     canvasDimensions: { kind: "viewport" },
     scene: { baseMode: "start", ruleset: SCENE_RULESETS.intro },
   },

@@ -152,5 +152,5 @@ export function useSceneField(
 
     engine.controls.current?.setFieldItems?.(result.placed);
     engine.controls.current?.setFieldVisible?.(result.placed.length > 0);
-  }, [engine, allocAvg, questionnaireOpen, viewportKey, hostId, mode, profile]);
+  }, [engine, allocAvg, questionnaireOpen, viewportKey, mode, profile]);
 }

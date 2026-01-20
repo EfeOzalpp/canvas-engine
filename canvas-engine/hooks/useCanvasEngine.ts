@@ -1,16 +1,17 @@
 // src/canvas-engine/hooks/useCanvasEngine.ts
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import type { CanvasBounds } from "../multi-canvas-setup/hostDefs.ts";
 import {
   startCanvasEngine,
   stopCanvasEngine,
   type CanvasEngineControls,
-} from '../runtime/index.ts';
+} from "../runtime/index.ts";
 
 type EngineOpts = {
+  enabled?: boolean;
   visible?: boolean;
-  dprMode?: 'fixed1' | 'cap2' | 'cap1_5' | 'auto';
+  dprMode?: "fixed1" | "cap2" | "cap1_5" | "auto";
   mount?: string;
   zIndex?: number;
   bounds?: CanvasBounds;
@@ -18,7 +19,7 @@ type EngineOpts = {
 
 function safeCall(fn: unknown) {
   try {
-    if (typeof fn === 'function') fn();
+    if (typeof fn === "function") fn();
   } catch {}
 }
 
@@ -45,11 +46,12 @@ function shutdownControls(controls: CanvasEngineControls | null, mount: string) 
 
 export function useCanvasEngine(opts: EngineOpts = {}) {
   const {
+    enabled = true,
     visible = true,
-    dprMode = 'cap2',
-    mount = '#canvas-root',
+    dprMode = "cap2",
+    mount = "#canvas-root",
     zIndex = 2,
-    bounds
+    bounds,
   } = opts;
 
   const controlsRef = useRef<CanvasEngineControls | null>(null);
@@ -57,13 +59,24 @@ export function useCanvasEngine(opts: EngineOpts = {}) {
   const [readyTick, setReadyTick] = useState(0);
 
   useEffect(() => {
+    // If disabled, ensure we are stopped and exit without starting.
+    if (!enabled) {
+      readyRef.current = false;
+
+      const controls = controlsRef.current;
+      controlsRef.current = null;
+
+      shutdownControls(controls, mount);
+      return;
+    }
+
     readyRef.current = false;
 
     controlsRef.current = startCanvasEngine({
       mount,
       dprMode,
       zIndex,
-      bounds, 
+      bounds,
       onReady: () => {
         readyRef.current = true;
         setReadyTick((t) => t + 1);
@@ -79,7 +92,7 @@ export function useCanvasEngine(opts: EngineOpts = {}) {
       shutdownControls(controls, mount);
       disposeGlobalEngineResources();
     };
-  }, [dprMode, mount, zIndex]);
+  }, [enabled, dprMode, mount, zIndex, bounds]);
 
   useEffect(() => {
     safeCall(() => controlsRef.current?.setVisible?.(Boolean(visible)));

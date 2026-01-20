@@ -37,7 +37,7 @@ export function drawGridOverlay(
   ctx.save();
   ctx.globalAlpha = gridAlpha;
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "rgba(0,0,0,0.35)";
+  ctx.strokeStyle = "rgba(0,0,0,0.1)";
 
   // verticals
   for (let c = 0; c <= cols; c++) {
@@ -62,7 +62,7 @@ export function drawGridOverlay(
   // usedRows boundary
   {
     const y = Math.round(oy + usedRows * cellH) + 0.5;
-    ctx.strokeStyle = "rgba(255,0,0,0.55)";
+    ctx.strokeStyle = "rgba(255,0,0,0)";
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(p.width, y);
@@ -73,7 +73,7 @@ export function drawGridOverlay(
   // forbidden
   if (spec.forbidden) {
     ctx.globalAlpha = forbAlpha;
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.fillStyle = "rgba(0,0,0,0)";
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {

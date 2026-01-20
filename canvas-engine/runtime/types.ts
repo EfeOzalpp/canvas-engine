@@ -3,10 +3,11 @@
 import type { SceneMode } from "../adjustable-rules/sceneRuleSets.ts";
 import type { CanvasPaddingSpec } from "../adjustable-rules/canvasPadding.ts";
 import type { EngineLayoutMode } from "./platform/mount.ts";
-import type { DprMode } from "./viewport.ts";
+import type { DprMode } from "./platform/viewport.ts";
 import type { CanvasBounds } from "../multi-canvas-setup/hostDefs.ts";
 import type { ShapeRegistry } from "./shapes/registry.ts";
 import type { DebugFlags } from "./debug/flags.ts";
+import type { EngineTick } from "./engine/scheduler.ts";
 
 /**
  * Payload item consumed by the runtime renderer.
@@ -18,6 +19,14 @@ export type EngineFieldItem = {
   y: number;
   shape: string;
   footprint?: any;
+};
+
+export type Entry = {
+  id: string;
+  tick: EngineTick;
+  priority: number;
+  fpsCap?: number;
+  lastTickMs: number;
 };
 
 /**

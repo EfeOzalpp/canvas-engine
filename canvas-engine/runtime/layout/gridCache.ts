@@ -66,7 +66,6 @@ export function computeGridCached(
     h: p.height,
     rows: spec.rows,
     useTopRatio: spec.useTopRatio ?? 1,
-    cols: 12, // keep your current forced cols behavior
   });
 
   const useTop = Math.max(0.01, Math.min(1, spec.useTopRatio ?? 1));

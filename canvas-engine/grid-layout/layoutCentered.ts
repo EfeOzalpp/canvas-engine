@@ -1,13 +1,13 @@
 // src/canvas/layout/grid-layout/layoutCentered.ts
 
-export type Pt = { x: number; y: number };
+import { resolveCols } from "./resolveCols.ts";
 
+export type Pt = { x: number; y: number };
 export type MakeCenteredGridOpts = {
   w: number;
   h: number;
   rows: number;
   useTopRatio?: number;
-  cols: number;
 };
 // w: available horizontal space
 // h: total vertical space
@@ -22,8 +22,13 @@ export function makeCenteredSquareGrid(opts: MakeCenteredGridOpts) {
   // row
   const cellH = usableH / Math.max(1, rows);
 
-  // controversial 
-  const cols = Math.max(1, Math.round(opts.cols || 12));
+  // cols
+  const cols = resolveCols({
+    rows,
+    widthPx: w,
+    heightPx: h,
+    useTopRatio,
+  });
   const cellW = w / cols;
 
   // no need for ox centering because we fill width exactly

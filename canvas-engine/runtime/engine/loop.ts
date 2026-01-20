@@ -64,7 +64,7 @@ export type LoopDeps = {
   shapeKeyOfItem: (it: EngineFieldItem) => string;
 };
 
-export function startEngineLoop(deps: LoopDeps) {
+export function createEngineTicker(deps: LoopDeps) {
   const {
     p,
     field,
@@ -83,9 +83,13 @@ export function startEngineLoop(deps: LoopDeps) {
   } = deps;
 
   let running = true;
-  let rafId: number | null = null;
 
-  function renderOneSandboxed(it: EngineFieldItem, rEff: number, sharedOpts: any, rootAppearK: number) {
+  function renderOneSandboxed(
+    it: EngineFieldItem,
+    rEff: number,
+    sharedOpts: any,
+    rootAppearK: number
+  ) {
     p.push();
     try {
       const opts2 = {
@@ -100,15 +104,21 @@ export function startEngineLoop(deps: LoopDeps) {
     }
   }
 
-  function frame(now: number) {
+  function tick(now: number) {
     if (!running) return;
 
+    // advance frame timing (deltaTime etc.)
     p.__tick(now);
 
     normalizeDprTransform(p);
     drawBackground(p);
 
-    const spec = getPaddingSpecForState(p.width, getSceneMode(), getPaddingSpecOverride());
+    const spec = getPaddingSpecForState(
+      p.width,
+      getSceneMode(),
+      getPaddingSpecOverride()
+    );
+
     const grid = computeGridCached(gridCache, p, spec);
 
     drawGridOverlay(
@@ -130,8 +140,10 @@ export function startEngineLoop(deps: LoopDeps) {
       }
     );
 
+    // time model used by shapes / particles
     const tMs = p.millis();
     const tSec = tMs / 1000;
+
     const bpm = 120;
     const beatPhase = ((tSec * bpm) / 60) % 1;
     const transport = { tSec, bpm, beatPhase };
@@ -164,12 +176,13 @@ export function startEngineLoop(deps: LoopDeps) {
       baseShared,
       perShapeScale: style.perShapeScale,
       baseR: style.r,
-      renderOne: (it, rEff, shared, rootAppearK) => renderOneSandboxed(it, rEff, shared, rootAppearK),
+      renderOne: (it, rEff, shared, rootAppearK) =>
+        renderOneSandboxed(it, rEff, shared, rootAppearK),
     });
 
     drawItems({
       items: field.items,
-      visible: field.visible, // <- use actual field visibility
+      visible: field.visible,
       nowMs: tMs,
       appearMs: style.appearMs,
       Z,
@@ -178,7 +191,8 @@ export function startEngineLoop(deps: LoopDeps) {
       baseR: style.r,
       baseShared,
       shapeKeyOfItem,
-      renderOne: (it, rEff, shared, rootAppearK) => renderOneSandboxed(it, rEff, shared, rootAppearK),
+      renderOne: (it, rEff, shared, rootAppearK) =>
+        renderOneSandboxed(it, rEff, shared, rootAppearK),
       onGhost: (g) => ghostsRef.current.push(g),
     });
 
@@ -186,20 +200,12 @@ export function startEngineLoop(deps: LoopDeps) {
       p.fill(255, 0, 0, 255);
       p.circle(hero.x, hero.y, style.r * 2);
     }
-
-    rafId = requestAnimationFrame(frame);
   }
 
-  rafId = requestAnimationFrame(frame);
-
   return {
+    tick,
     stop() {
       running = false;
-      if (rafId != null) {
-        try {
-          cancelAnimationFrame(rafId);
-        } catch {}
-      }
     },
   };
 }

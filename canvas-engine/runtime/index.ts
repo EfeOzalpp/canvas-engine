@@ -3,7 +3,8 @@
 import type { EngineControls, EngineFieldItem, StartCanvasEngineOpts } from "./types.ts";
 
 import { registerEngineInstance, stopCanvasEngine, isCanvasRunning, stopAllCanvasEngines } from "./engine/registry.ts";
-import { startEngineLoop } from "./engine/loop.ts";
+import { createEngineTicker } from "./engine/loop.ts";
+import { registerEngineFrame, unregisterEngineFrame } from "./engine/scheduler.ts";
 
 import { ensureMount, applyCanvasStyle } from "./platform/mount.ts";
 import { makeP, type PLike } from "./p/makeP.ts";
@@ -60,6 +61,8 @@ export function startCanvasEngine(opts: StartCanvasEngineOpts = {}): EngineContr
   const field = { items: [] as EngineFieldItem[], visible: false, epoch: 0 };
   const hero = { x: null as number | null, y: null as number | null, visible: false };
 
+  let ENGINE_SEQ = 0;
+  
   let canvasEl: HTMLCanvasElement | null = null;
   let p: PLike | null = null;
 
@@ -112,8 +115,10 @@ export function startCanvasEngine(opts: StartCanvasEngineOpts = {}): EngineContr
   // start loop
   // ───────────────────────────────────────────────────────────
   const ghostsRef = { current: [] as any[] }; // loop.ts will type this as Ghost[]; keep it strict there.
+  
+  const frameId = `${mount}::${++ENGINE_SEQ}`;
 
-  const loop = startEngineLoop({
+  const ticker = createEngineTicker({
     p: p!,
     field,
     hero,
@@ -146,7 +151,11 @@ export function startCanvasEngine(opts: StartCanvasEngineOpts = {}): EngineContr
     } catch {}
 
     try {
-      loop.stop();
+      unregisterEngineFrame(frameId);
+    } catch {}
+
+    try {
+      ticker.stop();
     } catch {}
 
     try {
@@ -250,8 +259,8 @@ export function startCanvasEngine(opts: StartCanvasEngineOpts = {}): EngineContr
     parentEl,
     stop,
   });
-
   onReady?.(controls);
+  registerEngineFrame(frameId, ticker.tick, { priority: zIndex });
   return controls;
 }
 
