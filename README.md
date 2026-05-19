@@ -1,10 +1,13 @@
-## Overview
+# Canvas Engine
 
-A constraint-based visualization engine built directly on the browser’s Canvas API.
+A constraint-based visualization engine built on the browser Canvas API.
 
-The system uses normalized input (0–1) to procedurally control color, shape allocation, motion, and layout through structured rules rather than hardcoded states.
+The current main branch contains the React-facing engine implementation:
 
-> Status: pre–v1  
-> The engine is functional, but the normalized input layer, and graphic-making is still being refined and is not yet finalized.
+- `canvas-engine-react/` - React hooks, runtime, shape drawing, modifiers, and scene logic.
 
-If you’re interested in using or exploring the system, feel free to reach out.
+Starter apps live on dedicated branches so they can be cloned as working app templates:
+
+- `starter/react` - React starter app.
+
+Status: pre-v1. The engine is functional, but the normalized input layer and public API are still being refined.

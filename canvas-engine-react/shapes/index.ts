@@ -1,0 +1,23 @@
+import { drawClouds } from './clouds';
+import { drawSnow } from './snow';
+import { drawHouse } from './house';
+import { drawPower } from './power';
+import { drawVilla } from './villa';
+import { drawCar } from './car';
+import { drawSea } from './sea';
+import { drawSun } from './sun';
+import { drawCarFactory } from './carFactory';
+import { drawBus } from './bus';
+import { drawTrees } from './trees';
+
+export { drawClouds };
+export { drawSnow };
+export { drawHouse };
+export { drawPower };
+export { drawVilla };
+export { drawCar };
+export { drawSea };
+export { drawSun };
+export { drawCarFactory };
+export { drawBus };
+export { drawTrees };
