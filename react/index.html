@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Encoding -->
+    <meta charset="UTF-8" />
+
+    <!-- Viewport: stable for canvas math -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+
+    <!-- App identity -->
+    <title>Canvas Engine</title>
+    <meta name="application-name" content="Canvas Engine" />
+    <meta
+      name="description"
+      content="Deterministic canvas-based scene composition and visual state engine."
+    />
+
+    <!-- Rendering intent -->
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Prevent unwanted browser behavior -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Favicon (optional, replace later) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- entry -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

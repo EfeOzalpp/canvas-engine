@@ -1,0 +1,7 @@
+shape-1:
+"header: "name: undefined",
+"foot-print: x: 2"
+
+layer-1:"name: house-body", "anchor-point: (0.2, 0);",
+"z-index: 1", "kind: rectangle", "vertex: y1:(0.2, 0), y2:(0.8, 0), y3:(0.2, 0.8), y4:(0.8, 0.8)",
+"color: #ffffff82"
